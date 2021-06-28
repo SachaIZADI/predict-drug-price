@@ -1,12 +1,9 @@
-from src.data_loader import DataLoader
+from src.training_pipeline import train_model
 
 
 def main():
-    dl = DataLoader()
-    data = dl.create_input_data()
-    print(data.head(3))
+    train_model()
 
 
 if __name__ == '__main__':
     main()
-
