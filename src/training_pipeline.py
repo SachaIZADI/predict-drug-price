@@ -1,6 +1,7 @@
+from sklearn.model_selection import cross_validate
+
 from src.feature_engineering.feature_builder import FeatureBuilder
-from src.model import Model
-from src.metrics import ValidationMetrics
+from src.model import model
 
 
 def train_model():
@@ -28,11 +29,17 @@ def train_model():
         target="price"
     )
 
-    model = Model()
-    model.fit(X_train, y_train)
+    scores = cross_validate(
+        model, X_train, y_train,
+        cv=5,
+        scoring='r2',
+        return_train_score=True
+    )
 
-    y_pred = model.predict(X_train)
-    metrics = ValidationMetrics(y_pred=y_pred, y_true=y_train)
+    print(
+        scores['train_score'].mean(),
+        scores['test_score'].mean()
+    )
 
-    print(metrics.mape)
-    print(metrics.r2)
+
+    # model.fit(X_train, y_train)
