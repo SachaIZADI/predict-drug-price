@@ -29,7 +29,8 @@ def train_model(
         'active_ingredient_feature_4', 'active_ingredient_feature_5',
         'active_ingredient_feature_6', 'active_ingredient_feature_7',
         'active_ingredient_feature_8', 'active_ingredient_feature_9',
-        'active_ingredient_feature_10'
+        'active_ingredient_feature_10',
+        "active_ingredients_count"
     ]
 
     feature_builder = FeatureBuilder()
@@ -50,7 +51,8 @@ def train_model(
         param_grid = {
             "n_estimators": [50, 100, 150, 200],
             "max_depth": [3, 5, 10, 15],
-            "learning_rate": [0.10, 0.15, 0.20, 0.25]
+            "learning_rate": [0.10, 0.15, 0.20, 0.25],
+            "lambda": [0, 1, 1.25, 1.5, 1.75, 2],
         }
         grid_search = GridSearchCV(model, param_grid, scoring='r2', refit=True, cv=5)
         grid_search.fit(X_train, y_train)
@@ -78,4 +80,4 @@ def train_model(
     # 0.3636898504750632
     # {'learning_rate': 0.15, 'max_depth': 5, 'n_estimators': 100}
 
-    # 0.9488878055963491 0.46553552076670196
+    # 0.9482052812895156 0.4671893256001427
