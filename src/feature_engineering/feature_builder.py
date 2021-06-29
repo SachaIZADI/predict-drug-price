@@ -3,6 +3,7 @@ from typing import Tuple, List
 
 from src.utils import reduce_data_frames
 from src.feature_engineering.main_feature import MainFeature
+from src.feature_engineering.active_ingredient_features import ActiveIngredientsFeature
 from src.data_loader import DataLoader
 
 
@@ -10,8 +11,8 @@ class FeatureBuilder:
 
     def __init__(self):
         self._features = [
-            MainFeature()
-            # FeatureB,
+            MainFeature(),
+            ActiveIngredientsFeature(),
             # FeatureC,
         ]
 
