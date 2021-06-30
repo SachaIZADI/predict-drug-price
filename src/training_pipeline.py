@@ -4,36 +4,19 @@ from sklearn.model_selection import GridSearchCV
 from src.feature_engineering.feature_builder import FeatureBuilder
 from src.model import model
 from src.visualization import plot_feature_importance
+from src.config import config
 
 
-def train_model(
-    use_grid_search: bool = True
-):
+def train_model():
 
     # TODO :
     #  - [ ] Create 1 or 2 additional features
     #  - [ ] Add Missing Value handling
-    #  - [ ] Finetune model : https://towardsdatascience.com/fine-tuning-xgboost-in-python-like-a-boss-b4543ed8b1e
     #  - [ ] Finalize model pipeline
-
-
-    FEATURES = [
-        'label_plaquette', 'label_ampoule',
-        'label_flacon', 'label_tube', 'label_stylo', 'label_seringue',
-        'label_pilulier', 'label_sachet', 'label_comprime', 'label_gelule',
-        'label_film', 'label_poche', 'label_capsule', 'count_plaquette',
-        'count_ampoule', 'count_flacon', 'count_tube', 'count_stylo',
-        'count_seringue', 'count_pilulier', 'count_sachet', 'count_comprime',
-        'count_gelule', 'count_film', 'count_poche', 'count_capsule',
-        'count_ml',
-        'active_ingredient_feature_1', 'active_ingredient_feature_2',
-        'active_ingredient_feature_3',
-        'active_ingredient_feature_4', 'active_ingredient_feature_5',
-        'active_ingredient_feature_6', 'active_ingredient_feature_7',
-        'active_ingredient_feature_8', 'active_ingredient_feature_9',
-        'active_ingredient_feature_10',
-        "active_ingredients_count"
-    ]
+    #    - [ ] Config
+    #    - [ ] Training
+    #    - [ ] Save model
+    #  - [ ] Generate output
 
     feature_builder = FeatureBuilder()
     feature_builder.fit()
@@ -44,44 +27,39 @@ def train_model(
 
     X_train, y_train, *_, = FeatureBuilder.get_train_test_sets(
         features_df,
-        features=FEATURES,
-        target="price"
+        features=config.features_to_use,
+        target=config.target,
     )
 
-    if use_grid_search:
+    if config.use_grid_search:
 
-        param_grid = {
-            #"n_estimators": [50, 100, 150, 200],
-            #"max_depth": [3, 5, 10, 15],
-            #"learning_rate": [0.10, 0.15, 0.20, 0.25],
-            # "lambda": [0, 1, 1.25, 1.5, 1.75, 2],
-            # "alpha": [0, 1, 1.5, 2],
+        from dataclasses import asdict
+        param_grid = asdict(config.grid_search_params)
 
-            "reg_lambda": [0, 10, 15, 20],
-            "reg_alpha": [0, 10, 15, 20],
-        }
         grid_search = GridSearchCV(model, param_grid, scoring='r2', refit=True, cv=3, verbose=10)
         grid_search.fit(X_train, y_train)
 
         print(grid_search.best_score_)
         print(grid_search.best_params_)
 
+    if config.use_cross_validation:
 
-    scores = cross_validate(
-        model, X_train, y_train,
-        cv=5,
-        scoring='r2',
-        return_train_score=True
-    )
+        scores = cross_validate(
+            model, X_train, y_train,
+            cv=5,
+            scoring='r2',
+            return_train_score=True
+        )
 
-    print(
-        scores['train_score'].mean(),
-        scores['test_score'].mean()
-    )
+        print(
+            scores['train_score'].mean(),
+            scores['test_score'].mean()
+        )
 
     model.fit(X_train, y_train)
 
-    plot_feature_importance(model)
+    if config.visualize_results:
+        plot_feature_importance(model)
 
 
 

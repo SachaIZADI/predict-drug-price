@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from pathlib import Path
+from utils import get_git_root
 from typing import List
 
 
@@ -26,8 +28,15 @@ class GridSearchParams:
 class Config:
     use_grid_search: bool = False
     use_cross_validation: bool = True
+    visualize_results: bool = True
+    save_model: bool = True
+
+    model_path: Path = get_git_root() / "model" / "xgb.pkl"
+
     xgboost_params: XGBParams = XGBParams()
-    grid_search_params: GridSearchParams = GridSearchParams() # TODO : use asdict(GridSearchParams()) in pipeline
+    grid_search_params: GridSearchParams = GridSearchParams()
+
+    target: str = "price"
     features_to_use = [
         'label_plaquette', 'label_ampoule',
         'label_flacon', 'label_tube', 'label_stylo', 'label_seringue',
@@ -45,3 +54,6 @@ class Config:
         'active_ingredient_feature_10',
         "active_ingredients_count"
     ]
+
+
+config = Config()
