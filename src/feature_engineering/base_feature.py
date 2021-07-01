@@ -1,15 +1,30 @@
-from abc import ABC
+"""
+Base classes for constructing features.
+"""
+import re
+from typing import List
 
-import pandas as pd
+from sklearn.base import TransformerMixin, BaseEstimator
 
 
-class Feature(ABC):
+class BaseFeature(TransformerMixin, BaseEstimator):
 
-    def __init__(self, **kwargs):
-        pass
+    @classmethod
+    def name(cls) -> str:
+        words = re.findall('[A-Z][^A-Z]*', cls.__name__)
+        return '.'.join(words).lower()
 
-    def fit(self, **kwargs):
-        pass
+    def fit(self, X, y=None) -> BaseEstimator:
+        return self
 
-    def transform(self, **kwargs) -> pd.DataFrame:
-        pass
+    def get_feature_names(self) -> List[str]:
+        return [self.name()]
+
+
+class ColumnExtractorMixin:
+
+    def transform(self, X):
+        assert self._cname is not None, (
+            f'_cname is None for {self.__class__.__name__}. '
+            f'You need to provide _cname')
+        return X[[self._cname]]

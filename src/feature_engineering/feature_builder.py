@@ -1,54 +1,52 @@
-import pandas as pd
-from typing import Tuple, List
+from sklearn.pipeline import FeatureUnion
 
-from src.utils import reduce_data_frames
-from src.feature_engineering.drug_label_feature import DrugLabelFeature
-from src.feature_engineering.active_ingredient_feature import ActiveIngredientsFeature
-from src.feature_engineering.commercial_feature import CommercialFeature
-from src.data_loader import DataLoader
+from .active_ingredient_feature import *
+from .commercial_feature import *
+from .drug_label_feature import *
 
+FEATURES_LIST = [
+    # ---- Active Ingredients features -----
+    ActiveIngredientsCount,
+    ActiveIngredientsFeature,
 
-class FeatureBuilder:
+    # ---- Commercial features -----
+    AdministrativeStatus,
+    MarketingStatus,
+    ApprovedForHospitalUse,
+    MarketingAuthorizationProcess,
+    ReimbursementRate,
+    MarketingAuthorizationDate,
+    MarketingDeclarationDate,
 
-    def __init__(self):
-        self._features = [
-            DrugLabelFeature(),
-            ActiveIngredientsFeature(),
-            CommercialFeature(),
-        ]
+    # ---- Drug labels features -----
+    LabelPlaquette,
+    LabelAmpoule,
+    LabelFlacon,
+    LabelTube,
+    LabelStylo,
+    LabelSeringue,
+    LabelPillulier,
+    LabelSachet,
+    LabelComprime,
+    LabelGelule,
+    LabelFilm,
+    LabelPoche,
+    LabelCapsule,
+    CountPlaquette,
+    CountAmpoule,
+    CountFlacon,
+    CountTube,
+    CountStylo,
+    CountSeringue,
+    CountPillulier,
+    CountSachet,
+    CountComprime,
+    CountGelule,
+    CountFilm,
+    CountPoche,
+    CountCapsule,
+]
 
-    @property
-    def index(self) -> pd.DataFrame:
-        SOURCE_FILES = ["drugs_test", "drugs_train"]
-        input_data = DataLoader().load_data(SOURCE_FILES)
-        index = pd.concat([
-            input_data["drugs_test"].assign(label="test"),
-            input_data["drugs_train"].assign(label="train"),
-        ])
-        index = index[["drug_id", "label", "price"]].drop_duplicates(subset=["drug_id"], keep="first")
-        return index
+FEATURES_STORE = [(f.name(), f()) for f in FEATURES_LIST]
 
-    def fit(self):
-        for feature in self._features:
-            feature.fit()
-
-    def transform(self) -> pd.DataFrame:
-        feature_dfs = [
-            feature.transform() for feature in self._features
-        ]
-        return reduce_data_frames([self.index, *feature_dfs], on=["drug_id"])
-
-    @classmethod
-    def get_train_test_sets(
-        cls,
-        features_df: pd.DataFrame,
-        features: List[str],
-        target: str
-    ) -> Tuple[pd.DataFrame, pd.Series, pd.DataFrame, pd.Series]:
-
-        return (
-            features_df.loc[features_df["label"] == "train", features],
-            features_df.loc[features_df["label"] == "train", target],
-            features_df.loc[features_df["label"] == "test", features],
-            features_df.loc[features_df["label"] == "test", target],
-        )
+features_generator = FeatureUnion(FEATURES_STORE)

@@ -2,59 +2,46 @@ import pandas as pd
 from sklearn.decomposition import TruncatedSVD
 from functools import cached_property
 
-from src.feature_engineering.base_feature import Feature
-from src.data_loader import DataLoader
+from sklearn.preprocessing import OneHotEncoder
+from src.feature_engineering.base_feature import BaseFeature
 
 
-class ActiveIngredientsFeature(Feature):
+class ActiveIngredientsCount(BaseFeature):
+    def transform(self, X):
+        return X["active_ingredient"].apply(len)
 
-    SOURCE_FILES = ["active_ingredients"]
+class ActiveIngredientsFeature(BaseFeature):
+
+    # TODO: optimize this hyperparameter
     N_COMPONENTS = 10
 
-    def __init__(self):
-        self.active_ingredients_df = DataLoader().load_data(self.SOURCE_FILES)["active_ingredients"]
-        self.svd = TruncatedSVD(n_components=self.N_COMPONENTS)
+    def fit(self, X, y=None):
+        X = self.prepare_encoder_input(X)
+        encoder = OneHotEncoder(sparse=False)
+        self.encoder = encoder.fit(X[["active_ingredient"]])
+        X_encoded = self.encoder.transform(X[["active_ingredient"]])
 
-    def fit(self):
-        active_ingredients_df = self.active_ingredients_one_hot_encoding_df
-        active_ingredients_df = active_ingredients_df
-        self.svd.fit(active_ingredients_df)
+        X = self.prepare_svd_input(X, X_encoded)
+        svd = TruncatedSVD(n_components=self.N_COMPONENTS)
+        self.svd = svd.fit(X)
 
-    def transform(self) -> pd.DataFrame:
-        active_ingredients_df = self.active_ingredients_one_hot_encoding_df
-        active_ingredients_features_df = pd.DataFrame(
-            self.svd.transform(active_ingredients_df),
-            columns=[f"active_ingredient_feature_{i}" for i in range(1, self.N_COMPONENTS + 1)]
-        )
-        active_ingredients_df = pd.concat([
-            active_ingredients_df.reset_index()[["drug_id"]], active_ingredients_features_df
-        ], axis=1)
+    def transform(self, X):
+        X = self.prepare_encoder_input(X)
+        encoder = OneHotEncoder(sparse=False)
+        X_encoded = self.encoder.transform(X[["active_ingredient"]])
 
-        active_ingredients_df = active_ingredients_df.merge(
-            self.active_ingredients_count_df,
-            on=["drug_id"],
-            how="left",
-            validate="1:1",
-        )
+        X = self.prepare_svd_input(X, X_encoded)
+        return self.svd.transform(X)
 
-        return active_ingredients_df
+    @staticmethod
+    def prepare_encoder_input(X_input) -> pd.DataFrame:
+        X = X_input[["drug_id", "active_ingredient"]].explode("active_ingredient").reset_index(drop=True)
+        return X
 
-    @cached_property
-    def active_ingredients_one_hot_encoding_df(self) -> pd.DataFrame:
-        active_ingredients_df = (
-            self.active_ingredients_df
-            .assign(value=1)
-            .pivot_table(index="drug_id", columns="active_ingredient", values="value")
-            .fillna(0)
-        )
-        return active_ingredients_df
-
-    @cached_property
-    def active_ingredients_count_df(self) -> pd.DataFrame:
-        active_ingredients_count_df = (
-            self.active_ingredients_df
-            .groupby(["drug_id"], as_index=False)
-            .count()
-            .rename(columns={"active_ingredient": "active_ingredients_count"})
-        )
-        return active_ingredients_count_df
+    @staticmethod
+    def prepare_svd_input(X_input, X_encoded) -> pd.DataFrame:
+        X = pd.concat([
+            X_input[["drug_id"]],
+            pd.DataFrame(X_encoded),
+        ])
+        return X.groupby(["drug_id"], as_index=True).sum()

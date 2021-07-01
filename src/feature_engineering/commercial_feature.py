@@ -1,73 +1,61 @@
-import pandas as pd
-import numpy as np
-from functools import cached_property
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.decomposition import TruncatedSVD
-
-from src.feature_engineering.base_feature import Feature
-from src.data_loader import DataLoader
+from src.feature_engineering.base_feature import BaseFeature
 
 
-class CommercialFeature(Feature):
+class AdministrativeStatus(BaseFeature):
 
-    SOURCE_FILES = ["drugs_train", "drugs_test"]
-    FEATURES_TO_ENCODE = [
-        "administrative_status",
-        'marketing_status',
-        'approved_for_hospital_use',
-        'marketing_authorization_process',
-    ]
-    N_COMPONENTS = 10
+    def fit(self, X, y=None):
+        encoder = OneHotEncoder(sparse=False)
+        self.encoder = encoder.fit(X[["administrative_status"]])
+        return self
 
-    def __init__(self):
-        self.commercial_features_df = pd.concat([*DataLoader().load_data(self.SOURCE_FILES).values()])
-        self.one_hot_encoder = OneHotEncoder()
-        self.one_hot_encoder_pharma_companies = OneHotEncoder()
-        self.svd = TruncatedSVD(n_components=self.N_COMPONENTS)
-
-    def fit(self):
-        self.one_hot_encoder.fit(
-            self.commercial_features_df[self.FEATURES_TO_ENCODE]
-        )
-
-        one_hot_pharma_companies = self.one_hot_encoder_pharma_companies.fit_transform(
-            self.commercial_features_df[["pharmaceutical_companies"]]
-        )
-        self.svd.fit(one_hot_pharma_companies)
+    def transform(self, X):
+        return self.encoder.transform(X[["administrative_status"]])
 
 
-    def transform(self) -> pd.DataFrame:
+class MarketingStatus(BaseFeature):
 
-        commercial_features_df = self.commercial_features_df.copy()
-        commercial_features_df["reimbursement_rate"] = (
-            commercial_features_df["reimbursement_rate"].str.replace("%", "").astype(int) / 100
-        )
-        commercial_features_df['marketing_authorization_date'] //= 10000
-        commercial_features_df['marketing_declaration_date'] //= 10000
+    def fit(self, X, y=None):
+        encoder = OneHotEncoder(sparse=False)
+        self.encoder = encoder.fit(X[['marketing_status']])
+        return self
 
-        one_hot_data = self.one_hot_encoder.transform(commercial_features_df[self.FEATURES_TO_ENCODE])
-        one_hot_features = list(np.concatenate(self.one_hot_encoder.categories_))
-        one_hot_df = pd.DataFrame.sparse.from_spmatrix(one_hot_data, columns=one_hot_features)
+    def transform(self, X):
+        return self.encoder.transform(X[['marketing_status']])
 
-        one_hot_pharma_companies = self.one_hot_encoder_pharma_companies.transform(
-            self.commercial_features_df[["pharmaceutical_companies"]]
-        )
-        pharma_companies_features = pd.DataFrame(
-            self.svd.transform(one_hot_pharma_companies),
-            columns=[f"pharma_companies_{i}" for i in range(1, self.N_COMPONENTS + 1)]
-        )
 
-        commercial_features_df = pd.concat([
-            commercial_features_df.reset_index(drop=True),
-            one_hot_df.reset_index(drop=True),
-            pharma_companies_features.reset_index(drop=True),
-        ], axis=1)
+class ApprovedForHospitalUse(BaseFeature):
 
-        return commercial_features_df[[
-            "drug_id",
-            "reimbursement_rate",
-            'marketing_authorization_date',
-            'marketing_declaration_date',
-            *one_hot_features,
-            *[f"pharma_companies_{i}" for i in range(1, self.N_COMPONENTS + 1)],
-        ]]
+    def fit(self, X, y=None):
+        encoder = OneHotEncoder(sparse=False)
+        self.encoder = encoder.fit(X[['approved_for_hospital_use']])
+        return self
+
+    def transform(self, X):
+        return self.encoder.transform(X[['approved_for_hospital_use']])
+
+
+class MarketingAuthorizationProcess(BaseFeature):
+
+    def fit(self, X, y=None):
+        encoder = OneHotEncoder(sparse=False)
+        self.encoder = encoder.fit(X[['marketing_authorization_process']])
+        return self
+
+    def transform(self, X):
+        return self.encoder.transform(X[['marketing_authorization_process']])
+
+
+class ReimbursementRate(BaseFeature):
+    def transform(self, X):
+        return X["reimbursement_rate"].str.replace("%", "").astype(int) / 100
+
+
+class MarketingAuthorizationDate(BaseFeature):
+    def transform(self, X):
+        return X['marketing_authorization_date'] // 10000
+
+
+class MarketingDeclarationDate(BaseFeature):
+    def transform(self, X):
+        return X['marketing_declaration_date'] // 10000

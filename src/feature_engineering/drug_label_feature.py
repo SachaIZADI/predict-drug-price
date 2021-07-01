@@ -1,30 +1,108 @@
-import pandas as pd
+import numpy as np
+from sklearn.preprocessing import OneHotEncoder
 
-from src.feature_engineering.base_feature import Feature
-from src.data_loader import DataLoader
+from src.feature_engineering.base_feature import BaseFeature, ColumnExtractorMixin
 
-class DrugLabelFeature(Feature):
 
-    SOURCE_FILES = ["drugs_test", "drugs_train", "drug_label_feature_eng"]
+class LabelPlaquette(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_plaquette'
 
-    def __init__(self):
-        self.input_data = DataLoader().load_data(self.SOURCE_FILES)
 
-    def fit(self):
-        pass
+class LabelAmpoule(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_ampoule'
 
-    def transform(self) -> pd.DataFrame:
-        drugs_df = pd.concat([self.input_data["drugs_test"], self.input_data["drugs_train"]])
-        drugs_df = drugs_df[["drug_id", "description"]]
-        main_features_df = self.input_data["drug_label_feature_eng"]
-        main_features_df = main_features_df.drop_duplicates(subset=["description"], keep="first")
 
-        main_feature_df = drugs_df.merge(
-           main_features_df,
-            on=["description"],
-            how="left",
-            validate="m:1"
-        )
-        main_feature_df = main_feature_df.drop(columns=["description"])
+class LabelFlacon(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_flacon'
 
-        return main_feature_df
+
+class LabelTube(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_tube'
+
+
+class LabelStylo(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_stylo'
+
+
+class LabelSeringue(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_seringue'
+
+
+class LabelPillulier(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_pilulier'
+
+
+class LabelSachet(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_sachet'
+
+
+class LabelComprime(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_comprime'
+
+
+class LabelGelule(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_gelule'
+
+
+class LabelFilm(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_film'
+
+
+class LabelPoche(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_poche'
+
+
+class LabelCapsule(BaseFeature, ColumnExtractorMixin):
+    _cname = 'label_capsule'
+
+
+class CountPlaquette(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_plaquette'
+
+
+class CountAmpoule(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_ampoule'
+
+
+class CountFlacon(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_flacon'
+
+
+class CountTube(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_tube'
+
+
+class CountStylo(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_stylo'
+
+
+class CountSeringue(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_seringue'
+
+
+class CountPillulier(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_pilulier'
+
+
+class CountSachet(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_sachet'
+
+
+class CountComprime(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_comprime'
+
+
+class CountGelule(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_gelule'
+
+
+class CountFilm(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_film'
+
+
+class CountPoche(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_poche'
+
+
+class CountCapsule(BaseFeature, ColumnExtractorMixin):
+    _cname = 'count_capsule'

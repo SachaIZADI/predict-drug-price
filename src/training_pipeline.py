@@ -94,3 +94,4 @@ def train_model():
 
     # With comercial + pharma companies 01/07
     # 0.965119462085655 0.6468714741836734
+

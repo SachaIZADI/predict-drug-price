@@ -1,8 +1,8 @@
-from src.training_pipeline import train_model
+from src.train import train
 
 
 def main():
-    train_model()
+    train()
 
 
 if __name__ == '__main__':

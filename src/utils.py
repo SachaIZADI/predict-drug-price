@@ -1,6 +1,8 @@
 import git
 from pathlib import Path
-from typing import List
+from sklearn.base import BaseEstimator
+from sklearn.pipeline import Pipeline
+from typing import List, Union
 from functools import reduce
 import pandas as pd
 
@@ -19,3 +21,6 @@ def reduce_data_frames(
         return left_df.merge(right_df, on=on, how=how)
 
     return reduce(single_merge, frames)
+
+
+SklearnEstimator = Union[Pipeline, BaseEstimator]
