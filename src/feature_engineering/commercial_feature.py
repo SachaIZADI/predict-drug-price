@@ -1,3 +1,4 @@
+import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from src.feature_engineering.base_feature import BaseFeature
 
@@ -48,14 +49,14 @@ class MarketingAuthorizationProcess(BaseFeature):
 
 class ReimbursementRate(BaseFeature):
     def transform(self, X):
-        return X["reimbursement_rate"].str.replace("%", "").astype(int) / 100
+        return pd.DataFrame(X["reimbursement_rate"].str.replace("%", "").astype(int) / 100)
 
 
 class MarketingAuthorizationDate(BaseFeature):
     def transform(self, X):
-        return X['marketing_authorization_date'] // 10000
+        return X[['marketing_authorization_date']] // 10000
 
 
 class MarketingDeclarationDate(BaseFeature):
     def transform(self, X):
-        return X['marketing_declaration_date'] // 10000
+        return X[['marketing_declaration_date']] // 10000

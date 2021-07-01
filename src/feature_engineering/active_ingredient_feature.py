@@ -8,7 +8,7 @@ from src.feature_engineering.base_feature import BaseFeature
 
 class ActiveIngredientsCount(BaseFeature):
     def transform(self, X):
-        return X["active_ingredient"].apply(len)
+        return pd.DataFrame(X["active_ingredient"].apply(len))
 
 class ActiveIngredientsFeature(BaseFeature):
 
@@ -22,14 +22,13 @@ class ActiveIngredientsFeature(BaseFeature):
         X_encoded = self.encoder.transform(X[["active_ingredient"]])
 
         X = self.prepare_svd_input(X, X_encoded)
-        svd = TruncatedSVD(n_components=self.N_COMPONENTS)
-        self.svd = svd.fit(X)
+        self.svd = TruncatedSVD(n_components=self.N_COMPONENTS)
+        self.svd.fit(X)
+        return self
 
     def transform(self, X):
         X = self.prepare_encoder_input(X)
-        encoder = OneHotEncoder(sparse=False)
         X_encoded = self.encoder.transform(X[["active_ingredient"]])
-
         X = self.prepare_svd_input(X, X_encoded)
         return self.svd.transform(X)
 
@@ -43,5 +42,5 @@ class ActiveIngredientsFeature(BaseFeature):
         X = pd.concat([
             X_input[["drug_id"]],
             pd.DataFrame(X_encoded),
-        ])
+        ], axis=1)
         return X.groupby(["drug_id"], as_index=True).sum()

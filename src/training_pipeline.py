@@ -1,7 +1,7 @@
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import GridSearchCV
 
-from src.feature_engineering.feature_builder import FeatureBuilder
+from src.feature_engineering.feature_generator import FeatureBuilder
 from src.model import model
 from src.visualization import plot_feature_importance
 from src.config import config

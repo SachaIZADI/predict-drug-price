@@ -24,6 +24,8 @@ def train():
     X, y = ds.split_labels(data)
     X_train, X_test, y_train, y_test = ds.train_test_split(X, y)
 
+    model.fit(X_train, y_train)
+
     # TODO : ------------------------------------
 
     if optimize:
