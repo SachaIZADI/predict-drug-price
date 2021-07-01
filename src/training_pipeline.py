@@ -10,10 +10,11 @@ from src.config import config
 def train_model():
 
     # TODO :
-    #  - [ ] Create 1 or 2 additional features
+    #  - [x] Create 1 or 2 additional features
+    #    - [x] Add active ingredients features
     #    - [x] Add `reimbursement_rate` + `marketing_declaration_date` + `marketing_authorization_date`
-    #    - [ ] Create feature for 'pharmaceutical_companies'
-    #  - [ ] Add Missing Value handling
+    #    - [x] Create feature for 'pharmaceutical_companies'
+    #  - [ ] Add Missing Value handling ? --> check if needed
     #  - [ ] Add debug module
     #    - [ ] Visualize quality of fit
     #    - [ ] Investigate unfit model
@@ -22,6 +23,9 @@ def train_model():
     #    - [ ] Training
     #  - [ ] Generate output
     #  - [ ] Update readme
+    #    - [ ] How to run
+    #    - [ ] Modelling steps
+    #    - [ ] Caveats & next steps
 
     feature_builder = FeatureBuilder()
     feature_builder.fit()
