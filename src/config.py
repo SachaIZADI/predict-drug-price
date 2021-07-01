@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 from utils import get_git_root
-from typing import List
+from typing import List, Tuple
 
 
 @dataclass
@@ -17,59 +17,27 @@ class XGBParams:
 
 @dataclass
 class GridSearchParams:
-    n_estimators = [50, 100, 150, 200]
-    max_depth = [3, 5, 10, 15]
-    learning_rate = [0.10, 0.15, 0.20, 0.25]
-    reg_lambda = [0, 1, 1.25, 1.5, 1.75, 2]
-    reg_alpha = [0, 1, 1.5, 2]
+    estimator__n_estimators: tuple = (50, 100, 150, 200)
+    estimator__max_depth: tuple = (5, 10, 15)
+    estimator__learning_rate: tuple = (0.10, 0.15, 0.20)
+    estimator__reg_lambda: tuple = (0, 1, 1.5, 2)
+    estimator__reg_alpha: tuple = (0, 1, 1.5, 2)
 
 
 @dataclass
 class Config:
     use_grid_search: bool = False
-    use_cross_validation: bool = True
+    use_cross_validation: bool = False
+    cv_k_fold: int = 5
     visualize_results: bool = True
     save_model: bool = True
 
-    model_path: Path = get_git_root() / "model" / "xgb.pkl"
+    model_path: Path = get_git_root() / "model" / "pipeline.pkl"
 
+    n_components_active_ingrendients_svd: int = 10
     xgboost_params: XGBParams = XGBParams()
     grid_search_params: GridSearchParams = GridSearchParams()
 
     target: str = "price"
-    features_to_use = [
-        'label_plaquette', 'label_ampoule',
-        'label_flacon', 'label_tube', 'label_stylo', 'label_seringue',
-        'label_pilulier', 'label_sachet', 'label_comprime', 'label_gelule',
-        'label_film', 'label_poche', 'label_capsule', 'count_plaquette',
-        'count_ampoule', 'count_flacon', 'count_tube', 'count_stylo',
-        'count_seringue', 'count_pilulier', 'count_sachet', 'count_comprime',
-        'count_gelule', 'count_film', 'count_poche', 'count_capsule',
-        'count_ml',
-        'active_ingredient_feature_1', 'active_ingredient_feature_2',
-        'active_ingredient_feature_3',
-        'active_ingredient_feature_4', 'active_ingredient_feature_5',
-        'active_ingredient_feature_6', 'active_ingredient_feature_7',
-        'active_ingredient_feature_8', 'active_ingredient_feature_9',
-        'active_ingredient_feature_10',
-        "active_ingredients_count",
-
-        'Présentation abrogée', 'Présentation active',
-        "Arrêt de commercialisation (le médicament n'a plus d'autorisation)",
-        "Déclaration d'arrêt de commercialisation", 'Déclaration de commercialisation',
-        'Déclaration de suspension de commercialisation', 'non', 'oui', "Autorisation d'importation parallèle",
-        'Procédure centralisée', 'Procédure de reconnaissance mutuelle', 'Procédure décentralisée',
-        'Procédure nationale',
-
-        "reimbursement_rate",
-        'marketing_authorization_date',
-        'marketing_declaration_date',
-
-        # 'pharma_companies_1', 'pharma_companies_2', 'pharma_companies_3',
-        # 'pharma_companies_4', 'pharma_companies_5', 'pharma_companies_6',
-        # 'pharma_companies_7', 'pharma_companies_8', 'pharma_companies_9',
-        # 'pharma_companies_10'
-    ]
-
 
 config = Config()
