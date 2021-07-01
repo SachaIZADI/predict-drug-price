@@ -84,3 +84,9 @@ def train_model():
     #     reg_alpha=0.3,
     #     gamma=1,
     #     verbosity=1
+
+    # With commercial 01/07
+    # 0.9644703295278356 0.647770480569298
+
+    # With comercial + pharma companies 01/07
+    # 0.965119462085655 0.6468714741836734

@@ -64,6 +64,11 @@ class Config:
         "reimbursement_rate",
         'marketing_authorization_date',
         'marketing_declaration_date',
+
+        # 'pharma_companies_1', 'pharma_companies_2', 'pharma_companies_3',
+        # 'pharma_companies_4', 'pharma_companies_5', 'pharma_companies_6',
+        # 'pharma_companies_7', 'pharma_companies_8', 'pharma_companies_9',
+        # 'pharma_companies_10'
     ]
 
 
