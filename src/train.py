@@ -1,7 +1,8 @@
 from logging import getLogger
 
-from sklearn.model_selection import cross_validate
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, cross_validate
+from sklearn.metrics import r2_score
+
 import pickle
 from dataclasses import asdict
 
@@ -49,17 +50,20 @@ def train():
         logger.info(f"Mean of R2 on TEST set: {scores['test_score'].mean()}")
         logger.info(f"Variance of R2 on TEST set: {scores['test_score'].var()}")
 
+    logger.info(f'Training of {model.__class__.__name__} for train/test score')
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    y_pred = TargetLogTransformation.un_transform(y_pred)
+    y_test = TargetLogTransformation.un_transform(y_test)
+    logger.info(f"R2 on TEST set: {r2_score(y_true=y_test, y_pred=y_pred)}")
+
+
     if config.visualize_results:
         logger.info(f'Training of {model.__class__.__name__} for visualization & debug…')
         model.fit(X_train, y_train)
 
         logger.info(f'Launching visualization…')
         plot_feature_importance(model)
-        y_pred = model.predict(X_test)
-
-        y_test = TargetLogTransformation.un_transform(y_test)
-        y_pred = TargetLogTransformation.un_transform(y_pred)
-
         plot_errors(y_pred=y_pred, y_true=y_test, log=True)
 
     logger.info(f'Final training of {model.__class__.__name__} on fulldataset…')
