@@ -27,7 +27,7 @@ class GridSearchParams:
 @dataclass
 class Config:
     use_grid_search: bool = False
-    use_cross_validation: bool = False
+    use_cross_validation: bool = True
     cv_k_fold: int = 5
     visualize_results: bool = True
     save_model: bool = True

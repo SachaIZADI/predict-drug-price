@@ -5,7 +5,7 @@ from sklearn.model_selection import GridSearchCV
 import pickle
 from dataclasses import asdict
 
-from src.model import model
+from src.model import model, TargetLogTransformation
 import src.data.dataset as ds
 from src.visualization import plot_feature_importance, plot_errors
 from src.config import config
@@ -20,6 +20,8 @@ def train():
 
     data = ds.get_dataset(train=True, test=False)
     X, y = ds.split_labels(data)
+    y = TargetLogTransformation.transform(y)
+
     X_train, X_test, y_train, y_test = ds.train_test_split(X, y)
 
     if config.use_grid_search:
@@ -54,6 +56,10 @@ def train():
         logger.info(f'Launching visualization…')
         plot_feature_importance(model)
         y_pred = model.predict(X_test)
+
+        y_test = TargetLogTransformation.un_transform(y_test)
+        y_pred = TargetLogTransformation.un_transform(y_pred)
+
         plot_errors(y_pred=y_pred, y_true=y_test, log=True)
 
     logger.info(f'Final training of {model.__class__.__name__} on fulldataset…')
