@@ -3,7 +3,7 @@ import pandas as pd
 from src.feature_engineering.base_feature import Feature
 from src.data_loader import DataLoader
 
-class MainFeature(Feature):
+class DrugLabelFeature(Feature):
 
     SOURCE_FILES = ["drugs_test", "drugs_train", "drug_label_feature_eng"]
 

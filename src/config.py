@@ -52,7 +52,18 @@ class Config:
         'active_ingredient_feature_6', 'active_ingredient_feature_7',
         'active_ingredient_feature_8', 'active_ingredient_feature_9',
         'active_ingredient_feature_10',
-        "active_ingredients_count"
+        "active_ingredients_count",
+
+        'Présentation abrogée', 'Présentation active',
+        "Arrêt de commercialisation (le médicament n'a plus d'autorisation)",
+        "Déclaration d'arrêt de commercialisation", 'Déclaration de commercialisation',
+        'Déclaration de suspension de commercialisation', 'non', 'oui', "Autorisation d'importation parallèle",
+        'Procédure centralisée', 'Procédure de reconnaissance mutuelle', 'Procédure décentralisée',
+        'Procédure nationale',
+
+        "reimbursement_rate",
+        'marketing_authorization_date',
+        'marketing_declaration_date',
     ]
 
 

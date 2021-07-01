@@ -2,8 +2,9 @@ import pandas as pd
 from typing import Tuple, List
 
 from src.utils import reduce_data_frames
-from src.feature_engineering.main_feature import MainFeature
-from src.feature_engineering.active_ingredient_features import ActiveIngredientsFeature
+from src.feature_engineering.drug_label_feature import DrugLabelFeature
+from src.feature_engineering.active_ingredient_feature import ActiveIngredientsFeature
+from src.feature_engineering.commercial_feature import CommercialFeature
 from src.data_loader import DataLoader
 
 
@@ -11,9 +12,9 @@ class FeatureBuilder:
 
     def __init__(self):
         self._features = [
-            MainFeature(),
+            DrugLabelFeature(),
             ActiveIngredientsFeature(),
-            # FeatureC,
+            CommercialFeature(),
         ]
 
     @property

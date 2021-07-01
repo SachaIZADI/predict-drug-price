@@ -11,12 +11,17 @@ def train_model():
 
     # TODO :
     #  - [ ] Create 1 or 2 additional features
+    #    - [x] Add `reimbursement_rate` + `marketing_declaration_date` + `marketing_authorization_date`
+    #    - [ ] Create feature for 'pharmaceutical_companies'
     #  - [ ] Add Missing Value handling
+    #  - [ ] Add debug module
+    #    - [ ] Visualize quality of fit
+    #    - [ ] Investigate unfit model
     #  - [ ] Finalize model pipeline
-    #    - [ ] Config
+    #    - [x] Config
     #    - [ ] Training
-    #    - [ ] Save model
     #  - [ ] Generate output
+    #  - [ ] Update readme
 
     feature_builder = FeatureBuilder()
     feature_builder.fit()
