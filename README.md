@@ -21,6 +21,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+3. Unzip the data in data.zip and put all `.csv` files under the `data` folder. You can run the following shell script
+```
+. data/unzip_data.sh
+```
+
 ## Run the code
 
 The package can be called via CLI - 2 pipelines (`train` and `predict`) are implemented
