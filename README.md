@@ -54,7 +54,7 @@ save_model: bool = True # <-- Set to True to save the model in a pickle file
 ## Modeling aspects & discussion
 
 ### Evaluation metric
-The `price` variable I are modelling has a pretty wide distribution
+The `price` variable we are modelling has a pretty wide distribution
 ```
 - min: 0.6
 - max: 990.4
@@ -63,17 +63,17 @@ The `price` variable I are modelling has a pretty wide distribution
 ```
 
 Depending on the business question we want to solve, we might prefer
-- to be more accurate on higher-priced products
+- to be more accurate on higher-priced products or on lower-priced products
 - to predict a price range for products (e.g. [0-1], [1-5], ... [100-500], [500+]) 
 - etc.
 
-This utimately changes the evaluation metric we optimize and the way we model price. 
+This utimately changes the evaluation metric we optimize for, and the way we model price. 
 
 Missing a bit of business contest I chose to optimize for the mean squared error of the log-price, such that a 50% error
 on a cheap drug has the same "weight" as a 50% error on an expensive drug.
 
 ### Feature engineering
-The feature engineering code is available at `/Users/izadisacha/Documents/MM_case/src/feature_engineering`.
+The feature engineering code is available at `/src/feature_engineering`.
 Most features provided were plugged as is into the model, except for :
 - categorical variables, that were one-hot encoded
 - active ingredients, where we added a "number of active ingredients per drug" feature, as well as dimensionality
@@ -95,10 +95,10 @@ The model performs significantly better than a "baseline" model (that simply pre
 - Model ‘mean_squared_log_error’ on TEST set: 0.50
 ```
 
-The performance should still be improved as the model 
-- still has a high loss *(the model has the capacity to overfit the dataset - in some experiments I reduced the error 
+The performance should still be improved:
+- the model still has a high loss *(the model has the capacity to overfit the dataset - in some experiments I reduced the error 
   to ~0 on the training set with high `tree_depth`)*
-- is overfitting the training set by a non-negligible rate: 
+- the model is overfitting on the training set: 
 ```
 - Mean of ‘neg_mean_squared_log_error’ on TRAIN set: -0.27
  Mean of ‘neg_mean_squared_log_error’ on TEST set: -0.50
