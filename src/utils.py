@@ -16,7 +16,6 @@ def get_git_root() -> Path:
 def reduce_data_frames(
     frames: List[pd.DataFrame], on: List[str], how: str = "left"
 ) -> pd.DataFrame:
-
     def single_merge(left_df: pd.DataFrame, right_df: pd.DataFrame):
         return left_df.merge(right_df, on=on, how=how)
 

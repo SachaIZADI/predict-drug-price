@@ -24,5 +24,5 @@ def main(do_train: bool, do_predict: bool):
         predict()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

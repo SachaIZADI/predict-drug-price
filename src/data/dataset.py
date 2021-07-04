@@ -16,12 +16,12 @@ def get_dataset(train: bool = True, test: bool = True) -> pd.DataFrame:
     drugs_test = load_data("drugs_test.csv")
     drugs_train = load_data("drugs_train.csv")
 
-    drug_label_feature_eng = drug_label_feature_eng.drop_duplicates(subset=["description"], keep="first")
-    active_ingredients = (
-        active_ingredients
-            .groupby(["drug_id"], as_index=False)
-            .aggregate({"active_ingredient": list})
+    drug_label_feature_eng = drug_label_feature_eng.drop_duplicates(
+        subset=["description"], keep="first"
     )
+    active_ingredients = active_ingredients.groupby(
+        ["drug_id"], as_index=False
+    ).aggregate({"active_ingredient": list})
 
     dataset = pd.concat([drugs_train, drugs_test])
     dataset = dataset.merge(
@@ -61,7 +61,9 @@ def train_test_split(X: Sequence, y: Sequence) -> tuple:
     return _train_test_split(X, y, test_size=0.2, random_state=42)
 
 
-def split_labels(df: pd.DataFrame, target: str = config.target) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def split_labels(
+    df: pd.DataFrame, target: str = config.target
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
     y = df[target]
     X = df.drop([target], axis=1)
     return X, y

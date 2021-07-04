@@ -8,7 +8,6 @@ FEATURES_LIST = [
     # ---- Active Ingredients features -----
     ActiveIngredientsCount,
     ActiveIngredientsFeature,
-
     # ---- Commercial features -----
     AdministrativeStatus,
     MarketingStatus,
@@ -17,7 +16,6 @@ FEATURES_LIST = [
     ReimbursementRate,
     MarketingAuthorizationDate,
     MarketingDeclarationDate,
-
     # ---- Drug labels features -----
     LabelPlaquette,
     LabelAmpoule,

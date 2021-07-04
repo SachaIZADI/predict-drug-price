@@ -13,7 +13,4 @@ regressor = TransformedTargetRegressor(
     inverse_func=np.exp,
 )
 
-model = Pipeline([
-    ('features', features_generator),
-    ('estimator', regressor)
-])
+model = Pipeline([("features", features_generator), ("estimator", regressor)])

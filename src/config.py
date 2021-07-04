@@ -33,4 +33,5 @@ class Config:
 
     target: str = "price"
 
+
 config = Config()
