@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from utils import get_git_root
+from src.utils import get_git_root
 
 
 @dataclass
