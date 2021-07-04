@@ -1,27 +1,20 @@
 from dataclasses import dataclass
 from pathlib import Path
 from utils import get_git_root
-from typing import List, Tuple
 
 
 @dataclass
 class XGBParams:
-    max_depth: int = 10
-    learning_rate: float = 0.01
-    colsample_bytree: float = 0.4
-    subsample: float = 0.8
-    n_estimators: int = 1000
-    reg_alpha: float = 0.3
-    gamma: float = 10
+    max_depth: int = 5
+    learning_rate: float = 0.05
+    n_estimators: int = 500
 
 
 @dataclass
 class GridSearchParams:
-    estimator__n_estimators: tuple = (50, 100, 150, 200)
-    estimator__max_depth: tuple = (5, 10, 15)
-    estimator__learning_rate: tuple = (0.10, 0.15, 0.20)
-    estimator__reg_lambda: tuple = (0, 1, 1.5, 2)
-    estimator__reg_alpha: tuple = (0, 1, 1.5, 2)
+    estimator__regressor__n_estimators: tuple = (50, 100, 500, 1000)
+    estimator__regressor__max_depth: tuple = (5, 10, 15)
+    estimator__regressor__learning_rate: tuple = (0.05, 0.10, 0.15)
 
 
 @dataclass

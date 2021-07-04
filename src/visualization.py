@@ -14,7 +14,7 @@ def plot_feature_importance(
     feature_names = model[0].get_feature_names()
     index_renaming = {f"f{i}": feature_names[i] for i in range(len(feature_names))}
 
-    feature_importance = model[1].get_booster().get_score(importance_type=importance_type)
+    feature_importance = model[1].regressor_.get_booster().get_score(importance_type=importance_type)
     feature_importance = (
         pd.DataFrame(
             data=feature_importance.values(),
@@ -37,7 +37,7 @@ def plot_errors(
 ):
     plt.figure(figsize=figsize)
     plt.xlabel("y_true")
-    plt.xlabel("y_pred")
+    plt.ylabel("y_pred")
 
     if log:
         plt.xscale("log")
